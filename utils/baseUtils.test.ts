@@ -4,12 +4,11 @@ import {
   getBaseName,
   transcribeDnaToRna,
   reverseTranscribeRnaToDna,
-  getAminoAcidCodeFromRnaCodon,
-  getAminoAcidDetailsFromCode,
+  getAminoAcidDef,
   translateRnaSequenceToPolypeptide,
   getOpenReadingFrame,
   getAllOpenReadingFrames,
-  getLongestOpenReadingFrame,
+  getLongestORF,
 } from './baseUtils';
 import {
   sequenceCovidBNT162b2,
@@ -26,62 +25,36 @@ describe('baseUtils', () => {
   });
 
   test('transcribeDnaToRna', () => {
-    expect(transcribeDnaToRna('A')).toEqual('U');
-    expect(transcribeDnaToRna('C')).toEqual('G');
-    expect(transcribeDnaToRna('G')).toEqual('C');
-    expect(transcribeDnaToRna('T')).toEqual('A');
+    expect(transcribeDnaToRna('ACTGACTG')).toEqual('UGACUGAC');
   });
 
-  test('reverseTranscribeRnaToDna', () => {
-    expect(reverseTranscribeRnaToDna('A')).toEqual('T');
-    expect(reverseTranscribeRnaToDna('C')).toEqual('G');
-    expect(reverseTranscribeRnaToDna('G')).toEqual('C');
-    expect(reverseTranscribeRnaToDna('U')).toEqual('A');
+  test('reverseTranscribeRnaBaseToDnaBase', () => {
+    expect(reverseTranscribeRnaToDna('UGACUGAC')).toEqual('ACTGACTG');
   });
 
-  test('getAminoAcidCodeFromRnaCodon', () => {
-    expect(getAminoAcidCodeFromRnaCodon('AUG')).toEqual('Met');
-    expect(getAminoAcidCodeFromRnaCodon('CCU')).toEqual('Pro');
-    expect(getAminoAcidCodeFromRnaCodon('CGU')).toEqual('Arg');
+  test('getAminoAcidDef', () => {
+    expect(getAminoAcidDef('STOP')).toEqual(null);
 
-    expect(getAminoAcidCodeFromRnaCodon('UAA')).toEqual(null);
-    expect(getAminoAcidCodeFromRnaCodon('UAG')).toEqual(null);
-    expect(getAminoAcidCodeFromRnaCodon('UGA')).toEqual(null);
-  });
-
-  test('getAminoAcidDetailsFromCode', () => {
-    expect(getAminoAcidDetailsFromCode('Met')).toEqual({
+    expect(getAminoAcidDef('Met')).toEqual({
+      code: 'Met',
       name: 'Methionine',
+      color: '#E6E600',
       propType: 'Nonpolar',
+      propColor: '#ffe75f',
     });
-    expect(getAminoAcidDetailsFromCode('Tyr')).toEqual({
-      name: 'Tyrosine',
-      propType: 'Polar',
-    });
-    expect(getAminoAcidDetailsFromCode('Asp')).toEqual({
-      name: 'Aspartic acid',
-      propType: 'Acidic',
-    });
-    expect(getAminoAcidDetailsFromCode('Lys')).toEqual({
-      name: 'Lysine',
-      propType: 'Basic',
-    });
-  });
 
-  test('getAminoAcidDetails', () => {
-    expect(getAminoAcidDetailsFromCode(getAminoAcidCodeFromRnaCodon('AUG'))).toEqual({
-      name: 'Methionine',
+    expect(getAminoAcidDef('Phe')).toEqual({
+      code: 'Phe',
+      name: 'Phenylalanine',
+      color: '#3232AA',
       propType: 'Nonpolar',
-    });
-    expect(getAminoAcidDetailsFromCode(getAminoAcidCodeFromRnaCodon('AAG'))).toEqual({
-      name: 'Lysine',
-      propType: 'Basic',
+      propColor: '#ffe75f',
     });
   });
 
   test('translateRnaSequenceToPolypeptide', () => {
     expect(() => translateRnaSequenceToPolypeptide('')).toThrow(
-      'Cannot find an amino acid for invalid RNA codon: "none"',
+      'Cannot find an amino acid for RNA codon: "none"',
     );
 
     expect(translateRnaSequenceToPolypeptide('UUUUUCUUAUUGUCUUCCUCAUCGUAU')).toEqual({
@@ -134,7 +107,7 @@ describe('baseUtils', () => {
     ]);
   });
 
-  test('getLongestOpenReadingFrame', () => {
+  test('getLongestORF', () => {
     const orfList: OrfList = [
       'AUGUAUGUAUGUCUUAUUAGUGUCUUCCUCAUCGUGAUCCUGGUGAAA',
       'AUGUAUGUCUUAUUAGUGUCUUCCUCAUCG',
@@ -143,13 +116,13 @@ describe('baseUtils', () => {
       '',
       '',
     ];
-    expect(getLongestOpenReadingFrame(orfList)).toEqual('AUGUAUGUAUGUCUUAUUAGUGUCUUCCUCAUCGUGAUCCUGGUGAAA');
+    expect(getLongestORF(orfList)).toEqual('AUGUAUGUAUGUCUUAUUAGUGUCUUCCUCAUCGUGAUCCUGGUGAAA');
 
     const orfsCovidBNT162b2 = getAllOpenReadingFrames(sequenceCovidBNT162b2, 'dna');
-    expect(getLongestOpenReadingFrame(orfsCovidBNT162b2)).toEqual(orfsCovidBNT162b2[0]);
+    expect(getLongestORF(orfsCovidBNT162b2)).toEqual(orfsCovidBNT162b2[0]);
 
     const orfsCovidMRNA1273 = getAllOpenReadingFrames(sequenceCovidMRNA1273, 'dna');
-    expect(getLongestOpenReadingFrame(orfsCovidMRNA1273)).toEqual(orfsCovidMRNA1273[0]);
+    expect(getLongestORF(orfsCovidMRNA1273)).toEqual(orfsCovidMRNA1273[0]);
   });
 });
 

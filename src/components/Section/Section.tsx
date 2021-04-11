@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 type SectionHeaderProps = {
-  pretitle?: any;
   title: string;
   subtitle: string;
 };
@@ -9,7 +8,6 @@ type SectionHeaderProps = {
 export function SectionHeader(props: SectionHeaderProps) {
   return (
     <div className="section__header">
-      {props.pretitle}
       <h2>{props.title}</h2>
       <p>{props.subtitle}</p>
     </div>

@@ -2,6 +2,17 @@
 @import './base.scss';
 
 // components
+@import '../../components/AminoAcid/amino-acid.scss';
+@import '../../components/AminoAcidSequence/amino-acid-sequence.scss';
+@import '../../components/Button/button.scss';
 @import '../../components/Header/header.scss';
+@import '../../components/NucleicAcidBase/nucleic-acid-base.scss';
+@import '../../components/NucleicAcidIndicators/nucleic-acid-indicators.scss';
+@import '../../components/NucleicAcidSequence/nucleic-acid-sequence.scss';
 @import '../../components/Section/section.scss';
-@import '../../components/Transcription/transcription.scss';
+
+// sections
+@import '../../sections/DNA/dna.scss';
+@import '../../sections/RNA/rna.scss';
+@import '../../sections/ORFs/orfs.scss';
+@import '../../sections/Polypeptide/polypeptide.scss';

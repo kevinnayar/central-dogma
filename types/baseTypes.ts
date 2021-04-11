@@ -45,7 +45,13 @@ export type AminoAcidCode =
 
 export type AminoAcidBioChemPropType = 'Nonpolar' | 'Polar' | 'Basic' | 'Acidic';
 
-export type AminoAcidDetails = { name: string; propType: null | AminoAcidBioChemPropType };
+export type AminoAcidDef = {
+  code: AminoAcidCode;
+  name: string;
+  color: string;
+  propType: AminoAcidBioChemPropType;
+  propColor: string;
+};
 
 export type RnaPolypeptideTranslation = {
   polypeptide: AminoAcidCode[];

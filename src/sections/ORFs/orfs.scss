@@ -1,0 +1,28 @@
+.orf-list {
+  &__item {
+    display: flex;
+  }
+
+  &__selector {
+    width: 24px;
+    flex-basis: 24px;
+    min-width: 24px;
+    height: 24px;
+    margin: 6px 12px 0 0;
+    background: white;
+    border: 4px solid white;
+    cursor: pointer;
+    transition: $hover-transition;
+    border-radius: 50%;
+
+    &.selected {
+      background: $light-blue-color;
+    }
+  }
+}
+
+
+
+
+
+

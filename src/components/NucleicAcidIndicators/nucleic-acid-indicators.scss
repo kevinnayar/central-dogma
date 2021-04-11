@@ -1,0 +1,22 @@
+.indicators {
+  display: flex;
+
+  .indicator {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+
+    i {
+      text-align: center;
+      color: $mid-gray-color;
+      font-size: 1em;
+    }
+  }
+}
+
+
+
+

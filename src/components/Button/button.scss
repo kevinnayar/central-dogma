@@ -1,0 +1,19 @@
+.button {
+  font-family: $font-sans-serif;
+  background: $mid-blue-color;
+  color: $light-gray-color;
+  padding: 12px 32px;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  font-family: $font-mono;
+  text-transform: uppercase;
+  margin-right: auto;
+  cursor: pointer;
+  transition: $hover-transition;
+
+  &:hover {
+    color: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+}
