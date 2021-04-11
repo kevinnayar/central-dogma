@@ -1,0 +1,85 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  background: $dark-blue-color;
+  justify-content: center;
+  align-items: center;
+
+  &__header {
+    padding: 2% 0 2%;
+    width: $desktop;
+    max-width: $desktop;
+
+    @media only screen and (max-width: $desktop) {
+      width: $tablet;
+    }
+
+    @media only screen and (max-width: $tablet) {
+      width: 90%;
+      padding: 2% 5%;
+    }
+
+    h4 {
+      color: $light-blue-color;
+      font-family: $font-mono;
+      font-size: 0.83em;
+    }
+
+    h2 {
+      color: white;
+      font-family: $font-mono;
+      margin-bottom: .33em;
+      
+      @media only screen and (max-width: $tablet) {
+        font-size: 1.17em;
+      }
+    }
+
+    p {
+      margin: 0 auto;
+      color: $mid-gray-color;
+      line-height: 1.5;
+      font-weight: 300;
+
+      @media only screen and (max-width: $tablet) {
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  &--light {
+    background: white;
+
+    .section__header {
+      h4 {
+        color: $dark-gray-color;
+      }
+
+      h2 {
+        color: $mid-blue-color;
+      }
+
+      p {
+        color: $light-blue-color;
+      }
+    }
+  }
+
+  &__body {
+    padding: 0 0 2%;
+    width: $desktop;
+    max-width: $desktop;
+
+    @media only screen and (max-width: $desktop) {
+      width: $tablet;
+    }
+
+    @media only screen and (max-width: $tablet) {
+      width: 90%;
+      padding: 0 5% 2%;
+    }
+
+    display: flex;
+    flex-direction: column;
+  }
+}

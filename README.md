@@ -1,5 +1,5 @@
-# The Central Dogma of Molecular Biology
+# The Central Dogma of Molecular Biology 🧬 
 
-```
-DNA -> mRNA -> Protein
+```ts
+DNA => [`Transcription`] => mRNA => [`Translation`] => Protein
 ```

@@ -10,92 +10,9 @@ import {
   AminoAcidCode,
   AminoAcidBioChemPropType,
   AminoAcidDetails,
-  RnaPolypeptideTranslationResult,
-  RnaSequenceTranslationResult,
-  TranslationFramesResult,
+  RnaPolypeptideTranslation,
+  OrfList,
 } from '../types/baseTypes';
-
-const mapDnaCodonToAminoAcidCode: { [codon: string]: AminoAcidCode } = {
-  TTT: 'Phe',
-  TTC: 'Phe',
-  TTA: 'Leu',
-  TTG: 'Leu',
-
-  TCT: 'Ser',
-  TCC: 'Ser',
-  TCA: 'Ser',
-  TCG: 'Ser',
-
-  TAT: 'Tyr',
-  TAC: 'Tyr',
-  TAA: 'STOP',
-  TAG: 'STOP',
-
-  TGT: 'Cys',
-  TGC: 'Cys',
-  TGA: 'STOP',
-  TGG: 'Trp',
-
-  CTT: 'Leu',
-  CTC: 'Leu',
-  CTA: 'Leu',
-  CTG: 'Leu',
-
-  CCT: 'Pro',
-  CCC: 'Pro',
-  CCA: 'Pro',
-  CCG: 'Pro',
-
-  CAT: 'His',
-  CAC: 'His',
-  CAA: 'Gln',
-  CAG: 'Gln',
-
-  CGT: 'Arg',
-  CGC: 'Arg',
-  CGA: 'Arg',
-  CGG: 'Arg',
-
-  ATT: 'Ile',
-  ATC: 'Ile',
-  ATA: 'Ile',
-  ATG: 'Met',
-
-  ACT: 'Thr',
-  ACC: 'Thr',
-  ACA: 'Thr',
-  ACG: 'Thr',
-
-  AAT: 'Asn',
-  AAC: 'Asn',
-  AAA: 'Lys',
-  AAG: 'Lys',
-
-  AGT: 'Ser',
-  AGC: 'Ser',
-  AGA: 'Arg',
-  AGG: 'Arg',
-
-  GTT: 'Val',
-  GTC: 'Val',
-  GTA: 'Val',
-  GTG: 'Val',
-
-  GCT: 'Ala',
-  GCC: 'Ala',
-  GCA: 'Ala',
-  GCG: 'Ala',
-
-  GAT: 'Asp',
-  GAC: 'Asp',
-  GAA: 'Glu',
-  GAG: 'Glu',
-
-  GGT: 'Gly',
-  GGC: 'Gly',
-  GGA: 'Gly',
-  GGG: 'Gly',
-};
 
 const mapRnaCodonToAminoAcidCode: { [codon: string]: AminoAcidCode } = {
   UUU: 'Phe',
@@ -229,7 +146,7 @@ const mapAminoAcidCodeToPropType: { [key in AminoAcidCode]: null | AminoAcidBioC
 
 export function getBaseName(base: BaseSymbol): BaseName {
   if (!bases[base]) {
-    throw new Error(`Cannot find name for invalid base symbol: ${base}`);
+    throw new Error(`Cannot find name for invalid base symbol: "${base}"`);
   }
   return bases[base];
 }
@@ -241,48 +158,42 @@ export function getBaseColor(base: BaseSymbol): string {
     case G: return '#00c000';
     case T:
     case U: return '#e6e600';
-    default: throw new Error(`Cannot find a color for invalid base symbol: ${base}`);
+    default: throw new Error(`Cannot find a color for invalid base symbol: "${base}"`);
   }
 }
 
-export function convertBaseDnaToRna(base: BaseSymbol): BaseSymbol {
+export function transcribeDnaToRna(base: BaseSymbol): BaseSymbol {
   switch (base) {
     case A: return U;
     case C: return G;
     case G: return C;
     case T: return A;
-    default: throw new Error(`Cannot convert invalid DNA base symbol: ${base}`);
+    default: throw new Error(`Cannot convert invalid DNA base symbol: "${base}"`);
   }
 }
 
-export function convertBaseRnaToDna(base: BaseSymbol): BaseSymbol {
+export function reverseTranscribeRnaToDna(base: BaseSymbol): BaseSymbol {
   switch (base) {
     case A: return T;
     case C: return G;
     case G: return C;
     case U: return A;
-    default: throw new Error(`Cannot convert invalid RNA base symbol: ${base}`);
+    default: throw new Error(`Cannot convert invalid RNA base symbol: "${base}"`);
   }
-}
-
-export function getAminoAcidCodeFromDnaCodon(codon: string): null | AminoAcidCode {
-  const aminoAcid = mapDnaCodonToAminoAcidCode[codon];
-  if (!aminoAcid) throw new Error(`Cannot find an amino acid for invalid DNA codon: ${codon}`);
-  return aminoAcid === 'STOP' ? null : aminoAcid;
 }
 
 export function getAminoAcidCodeFromRnaCodon(codon: string): null | AminoAcidCode {
   const aminoAcid = mapRnaCodonToAminoAcidCode[codon];
-  if (!aminoAcid) throw new Error(`Cannot find an amino acid for invalid RNA codon: ${codon}`);
+  if (!aminoAcid) throw new Error(`Cannot find an amino acid for invalid RNA codon: "${codon || 'none'}"`);
   return aminoAcid === 'STOP' ? null : aminoAcid;
 }
 
 export function getAminoAcidDetailsFromCode(code: AminoAcidCode): AminoAcidDetails {
   const name = mapAminoAcidCodeToFullName[code];
-  if (!name) throw new Error(`Cannot find amino acid name for code: ${code}`);
+  if (!name) throw new Error(`Cannot find amino acid name for code: "${code || 'none'}"`);
 
   const propType = mapAminoAcidCodeToPropType[code];
-  if (propType === undefined) throw new Error(`Cannot find amino acid biochemical properties for code: ${code}`);
+  if (propType === undefined) throw new Error(`Cannot find amino acid biochemical properties for code: "${code}"`);
 
   return {
     name,
@@ -296,107 +207,94 @@ export function getAminoAcidPropTypeColor(propType: AminoAcidBioChemPropType) {
     case 'Polar': return '#b3dec0';
     case 'Basic': return '#bbbfe0';
     case 'Acidic': return '#f8b7d3';
-    default: throw new Error(`Cannot find a color for invalid biochemical property: ${propType}`);
+    default: throw new Error(`Cannot find a color for invalid biochemical property: "${propType}"`);
   }
 }
 
-function translateRnaSequenceToPolypeptide(
+export function translateRnaSequenceToPolypeptide(
   sequence: string,
-  polypeptide: AminoAcidCode[],
-): RnaPolypeptideTranslationResult {
+  polypeptide: AminoAcidCode[] = [],
+): RnaPolypeptideTranslation {
   const codon = sequence.slice(0, 3);
   const remainingSequence = sequence.slice(3);
   const aminoAcid = getAminoAcidCodeFromRnaCodon(codon);
 
+  if (aminoAcid) polypeptide.push(aminoAcid);
+
   if (!aminoAcid || remainingSequence.length < 3) {
     return {
-      remainingSequence: sequence,
       polypeptide,
+      remainingSequence: !aminoAcid ? sequence : remainingSequence,
     };
   }
-
-  polypeptide.push(aminoAcid);
 
   return translateRnaSequenceToPolypeptide(remainingSequence, polypeptide);
 }
 
-export function translateRnaSequence(
-  sequence: string,
-  polypeptideChain?: AminoAcidCode[][],
-  indexes?: number[][],
-): RnaSequenceTranslationResult {
-  let sequenceResult: RnaSequenceTranslationResult = {
-    remainingSequence: sequence,
-    polypeptideChain: polypeptideChain || [],
-    indexes: indexes || [],
-  };
+export function getOpenReadingFrame(sequence: string, type: 'rna' | 'dna' = 'rna'): string {
+  const startCodon = type === 'rna' ? 'AUG' : 'ATG';
+  const stopCodons = type === 'rna' ? ['UAG', 'UAA', 'UGA'] : ['TAG', 'TAA', 'TGA'];
 
-  const [initial, remaining] = sequence.split(/AUG(.+)/);
-  if (!remaining) return sequenceResult;
+  const iterations = Math.floor(sequence.length / 3);
 
-  const polypeptideResult = translateRnaSequenceToPolypeptide(remaining, ['Met']);
-  const padding = sequenceResult.indexes.length
-    ? sequenceResult.indexes[sequenceResult.indexes.length - 1][1]
-    : 0;
-  const beginIndex = padding + initial.length;
-  const endIndex = padding + sequence.length - polypeptideResult.remainingSequence.length;
-
-  sequenceResult = {
-    remainingSequence: polypeptideResult.remainingSequence,
-    polypeptideChain: [...sequenceResult.polypeptideChain, polypeptideResult.polypeptide],
-    indexes: [...sequenceResult.indexes, [beginIndex, endIndex]],
-  };
-
-  return translateRnaSequence(
-    sequenceResult.remainingSequence,
-    sequenceResult.polypeptideChain,
-    sequenceResult.indexes
-  );
-}
-
-function convertSequenceToCodons(sequence: string, allCodons: string[] = []): string[] {
-  if (sequence.length < 3) return allCodons;
-
-  const codon = sequence.slice(0, 3);
-  const remaining = sequence.slice(3);
-
-  allCodons.push(codon);
-  return convertSequenceToCodons(remaining, allCodons);
-}
-
-function getValidReadingFrame(frame: Array<null | AminoAcidCode>): Array<null | AminoAcidCode> {
-  const readingFrame: Array<null | AminoAcidCode> = [];
+  let orf = '';
   let started = false;
 
-  for (let i = 0; i < frame.length; i += 1) {
-    const codon = frame[i];
-    if (codon === 'Met' && !started) {
-      started = true;
-      readingFrame.push(codon);
-    } else if (codon !== null && started) {
-      readingFrame.push(codon);
-    } else if (codon === null && started) {
-      break;
-    }
+  for (let i = 0; i < iterations; i += 1) {
+    const letter0 = sequence[i * 3 + 0];
+    const letter1 = sequence[i * 3 + 1];
+    const letter2 = sequence[i * 3 + 2];
+
+    if (!letter0 || !letter1 || !letter2) break;
+
+    const codon = `${letter0}${letter1}${letter2}`;
+
+    if (codon === startCodon && !started) started = true;
+
+    if (stopCodons.includes(codon)) break;
+
+    if (started) orf += codon;
+
+    if (i === iterations - 1) return ''; // no stop codon
   }
 
-  return readingFrame;
+  return orf;
 }
 
-export function translateRnaSequenceToFrames(sequence: string): TranslationFramesResult {
-  const codons1 = convertSequenceToCodons(sequence);
-  const codons2 = convertSequenceToCodons(sequence.slice(1));
-  const codons3 = convertSequenceToCodons(sequence.slice(2));
-
+export function getAllOpenReadingFrames(sequence: string, type: 'rna' | 'dna' = 'rna'): OrfList {
+  const reversed = sequence.split('').reverse().join('');
   return [
-    getValidReadingFrame(codons1.map(getAminoAcidCodeFromRnaCodon)),
-    getValidReadingFrame(codons2.map(getAminoAcidCodeFromRnaCodon)),
-    getValidReadingFrame(codons3.map(getAminoAcidCodeFromRnaCodon)),
+    getOpenReadingFrame(sequence, type),
+    getOpenReadingFrame(sequence.slice(1), type),
+    getOpenReadingFrame(sequence.slice(2), type),
+    getOpenReadingFrame(reversed, type),
+    getOpenReadingFrame(reversed.slice(1), type),
+    getOpenReadingFrame(reversed.slice(2), type),
   ];
 }
 
+export function getLongestOpenReadingFrame(orfList: OrfList): string {
+  let longest = orfList[0];
 
+  for (const orf of orfList) {
+    if (orf.length > longest.length) longest = orf;
+  }
 
+  return longest;
+}
 
+export function getLongestOpenReadingFrameIndex(orfList: OrfList): number {
+  let index = 0;
+  let length = 0;
 
+  for (let i = 0; i < orfList.length; i += 1) {
+    const orf = orfList[i];
+    if (orf.length > length) {
+      index = i;
+      length = orf.length;
+    }
+  }
+
+  return index;
+}
 

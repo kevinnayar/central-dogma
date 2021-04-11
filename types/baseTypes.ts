@@ -47,20 +47,10 @@ export type AminoAcidBioChemPropType = 'Nonpolar' | 'Polar' | 'Basic' | 'Acidic'
 
 export type AminoAcidDetails = { name: string; propType: null | AminoAcidBioChemPropType };
 
-export type RnaPolypeptideTranslationResult = {
-  remainingSequence: string;
+export type RnaPolypeptideTranslation = {
   polypeptide: AminoAcidCode[];
-};
-
-export type RnaSequenceTranslationResult = {
   remainingSequence: string;
-  polypeptideChain: AminoAcidCode[][];
-  indexes: number[][];
 };
 
-export type TranslationFramesResult = [
-  Array<null | AminoAcidCode>,
-  Array<null | AminoAcidCode>,
-  Array<null | AminoAcidCode>,
-];
+export type OrfList = [string, string, string, string, string, string];
 

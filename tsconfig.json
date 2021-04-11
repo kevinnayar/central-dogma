@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2018",
     "module": "commonjs",
     "jsx": "react",
     "incremental": true,
@@ -10,14 +10,15 @@
     "forceConsistentCasingInFileNames": true,
     "lib": [
       "dom",
-      "es2015"
+      "es2018"
     ],
     "baseUrl": "./",
     "outDir": "dist"
   },
   "include": [
     "src/*.ts",
-    "src/*.tsx"
+    "types/*.ts",
+    "utils/*.ts",
   ],
   "exclude": [
     "./node_modules"

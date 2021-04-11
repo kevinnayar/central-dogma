@@ -1,0 +1,83 @@
+$font-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+  sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$font-mono: 'JetBrains Mono', monospace, sans-serif;
+
+$light-blue-color: #76aef5;
+$mid-blue-color: #0971f1;
+$dark-blue-color: #37468c;
+
+$light-gray-color: #f3f4f9;
+$mid-gray-color: #c0c4d1;
+$dark-gray-color: #4a4a4d;
+
+$cubic-bezier: cubic-bezier(0.4, 0.0, 0.2, 1);
+$hover-transition: all 0.25s $cubic-bezier;
+
+$desktop: 1280px;
+$tablet: 1024px;
+$phone: 768px;
+
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 2em;
+}
+h2 {
+  font-size: 1.5em;
+}
+h3 {
+  font-size: 1.17em;
+}
+h4 {
+  font-size: 1em;
+}
+h5 {
+  font-size: 0.83em;
+}
+h6 {
+  font-size: 0.67em;
+}
+p {
+  font-size: 1em;
+}
+
+body {
+  margin: 0 auto;
+  padding: 0;
+  font-family: $font-sans-serif;
+  background: $light-gray-color;
+}
+
+.sections {
+  padding-top: 100px;
+}
+
+button {
+  font-family: $font-sans-serif;
+  background: $mid-blue-color;
+  color: $light-gray-color;
+  padding: 12px 32px;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  font-family: $font-mono;
+  text-transform: uppercase;
+  margin-right: auto;
+  cursor: pointer;
+  transition: $hover-transition;
+
+  &:hover {
+    color: white;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.footer {
+  height: 192px;
+}
+
+
+
+

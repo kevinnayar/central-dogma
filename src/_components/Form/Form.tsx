@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 type FormToggleProps = {
   formVisible: boolean;
-  toggleFormVisibility: (t: boolean) => void;
+  toggleFormVisibility: (visible: boolean) => void;
 };
 
 export function FormToggle(props: FormToggleProps) {
