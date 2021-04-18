@@ -6,8 +6,8 @@ import { AminoAcidSequence } from '../../components/AminoAcidSequence/AminoAcidS
 import { AminoAcidDef } from '../../../types/baseTypes';
 
 type Props = {
-  orf: string,
-  aminoAcidDefs: AminoAcidDef[];
+  orf: null | string,
+  aminoAcidDefs: null | AminoAcidDef[];
   width: number;
   height: number;
 };
@@ -40,12 +40,12 @@ function PolypeptideBody(props: Props) {
 }
 
 export function PolypeptideSection(props: Props) {
-  const title = 'Polypeptide';
+  const title = 'Polypeptide: Chain of Amino Acids';
   const subtitle = 'During Translation, the mRNA strand is translated to a chain of amino acids which eventually folds into a protein.';
   const variant = 'dark';
   return (
     <Section title={title} subtitle={subtitle} variant={variant}>
-      <PolypeptideBody {...props} />
+      {props.orf && props.aminoAcidDefs && <PolypeptideBody {...props} />}
     </Section>
   );
 }

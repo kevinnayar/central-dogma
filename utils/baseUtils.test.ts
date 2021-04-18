@@ -38,6 +38,7 @@ describe('baseUtils', () => {
     expect(getAminoAcidDef('Met')).toEqual({
       code: 'Met',
       name: 'Methionine',
+      letterCode: 'M',
       color: '#E6E600',
       propType: 'Nonpolar',
       propColor: '#ffe75f',
@@ -46,6 +47,7 @@ describe('baseUtils', () => {
     expect(getAminoAcidDef('Phe')).toEqual({
       code: 'Phe',
       name: 'Phenylalanine',
+      letterCode: 'F',
       color: '#3232AA',
       propType: 'Nonpolar',
       propColor: '#ffe75f',

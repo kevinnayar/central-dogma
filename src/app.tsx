@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   transcribeDnaToRna,
   getAllOpenReadingFrames,
@@ -13,6 +13,7 @@ import { Header } from './components/Header/Header';
 import { DNASection } from './sections/DNA/DNA';
 import { RNASection } from './sections/RNA/RNA';
 import { PolypeptideSection } from './sections/Polypeptide/Polypeptide';
+import { Footer } from './components/Footer/Footer';
 
 const seedTemplateDNA = [
   'TACAAAAAGAATAACAGAAGGAGTAGCATAATGACAACGACCGAAGAG',
@@ -60,6 +61,10 @@ export default function App() {
     }
   }
 
+  useEffect(() => {
+    transcribeAndTranslate(dna);
+  }, [dna]);
+
   return (
     <div className="app">
       <Header title="🧬 The Central Dogma of Molecular Biology" />
@@ -67,9 +72,9 @@ export default function App() {
         <DNASection dna={dna} setDna={transcribeAndTranslate} />
         <RNASection dna={dna} rna={rna} width={width} height={height} />
         {error && <div className="section section--error"><p>{error}</p></div>}
-        {orf && aminoAcidDefs && <PolypeptideSection orf={orf} aminoAcidDefs={aminoAcidDefs} width={width} height={height} />}
+        <PolypeptideSection orf={orf} aminoAcidDefs={aminoAcidDefs} width={width} height={height} />
       </div>
-      <footer className="footer"></footer>
+      <Footer text="Made by Kevin Nayar" />
     </div>
   );
 }
