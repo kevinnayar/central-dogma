@@ -14,7 +14,6 @@ import {
   OrfList,
 } from '../types/baseTypes';
 
-// DNA -> RNA conversion
 export function getBaseName(base: BaseSymbol): BaseName {
   if (!bases[base]) {
     throw new Error(`Cannot find name for invalid base symbol: "${base}"`);
@@ -71,8 +70,7 @@ export function reverseTranscribeRnaToDna(rna: string): string {
   return dna;
 }
 
-// Codon -> Amino Acid
-export function getAminoAcidCodeFromCodon(codon: string): null | AminoAcidCode {
+export function getAminoAcidCodeFromRnaCodon(codon: string): null | AminoAcidCode {
   const mapRnaCodonToAminoAcidCode: { [codon: string]: AminoAcidCode } = {
     UUU: 'Phe',
     UUC: 'Phe',
@@ -159,34 +157,149 @@ export function getAminoAcidCodeFromCodon(codon: string): null | AminoAcidCode {
   return aminoAcid === 'STOP' ? null : aminoAcid;
 }
 
-// Amino Acid -> Amino Acid details
+export function getAminoAcidCodeFromDnaCodon(codon: string): null | AminoAcidCode {
+  const mapRnaCodonToAminoAcidCode: { [codon: string]: AminoAcidCode } = {
+    TTT: 'Phe',
+    TTC: 'Phe',
+    TTA: 'Leu',
+    TTG: 'Leu',
+
+    TCT: 'Ser',
+    TCC: 'Ser',
+    TCA: 'Ser',
+    TCG: 'Ser',
+
+    TAT: 'Tyr',
+    TAC: 'Tyr',
+    TAA: 'STOP',
+    TAG: 'STOP',
+
+    TGT: 'Cys',
+    TGC: 'Cys',
+    TGA: 'STOP',
+    TGG: 'Trp',
+
+    CTT: 'Leu',
+    CTC: 'Leu',
+    CTA: 'Leu',
+    CTG: 'Leu',
+
+    CCT: 'Pro',
+    CCC: 'Pro',
+    CCA: 'Pro',
+    CCG: 'Pro',
+
+    CAT: 'His',
+    CAC: 'His',
+    CAA: 'Gln',
+    CAG: 'Gln',
+
+    CGT: 'Arg',
+    CGC: 'Arg',
+    CGA: 'Arg',
+    CGG: 'Arg',
+
+    ATT: 'Ile',
+    ATC: 'Ile',
+    ATA: 'Ile',
+    ATG: 'Met',
+
+    ACT: 'Thr',
+    ACC: 'Thr',
+    ACA: 'Thr',
+    ACG: 'Thr',
+
+    AAT: 'Asn',
+    AAC: 'Asn',
+    AAA: 'Lys',
+    AAG: 'Lys',
+
+    AGT: 'Ser',
+    AGC: 'Ser',
+    AGA: 'Arg',
+    AGG: 'Arg',
+
+    GTT: 'Val',
+    GTC: 'Val',
+    GTA: 'Val',
+    GTG: 'Val',
+
+    GCT: 'Ala',
+    GCC: 'Ala',
+    GCA: 'Ala',
+    GCG: 'Ala',
+
+    GAT: 'Asp',
+    GAC: 'Asp',
+    GAA: 'Glu',
+    GAG: 'Glu',
+
+    GGT: 'Gly',
+    GGC: 'Gly',
+    GGA: 'Gly',
+    GGG: 'Gly',
+  };
+  const aminoAcid = mapRnaCodonToAminoAcidCode[codon];
+  if (!aminoAcid) throw new Error(`Cannot find an amino acid for DNA codon: "${codon || 'none'}"`);
+  return aminoAcid === 'STOP' ? null : aminoAcid;
+}
+
 function getAminoAcidName(code: AminoAcidCode): string {
   const mapAminoAcidCodeToName: { [key in AminoAcidCode]: string } = {
-    Phe: 'Phenylalanine',
-    Leu: 'Leucine',
-    Ser: 'Serine',
-    Tyr: 'Tyrosine',
-    STOP: 'STOP',
-    Cys: 'Cysteine',
-    Trp: 'Tryptophan',
-    Pro: 'Proline',
-    His: 'Histidine',
-    Gln: 'Glutamine',
-    Arg: 'Arginine',
-    Ile: 'Isoleucine',
-    Met: 'Methionine',
-    Thr: 'Threonine',
-    Asn: 'Asparagine',
-    Lys: 'Lysine',
-    Val: 'Valine',
     Ala: 'Alanine',
+    Arg: 'Arginine',
+    Asn: 'Asparagine',
     Asp: 'Aspartic acid',
+    Cys: 'Cysteine',
+    Gln: 'Glutamine',
     Glu: 'Glutamic acid',
     Gly: 'Glycine',
+    His: 'Histidine',
+    Ile: 'Isoleucine',
+    Leu: 'Leucine',
+    Lys: 'Lysine',
+    Met: 'Methionine',
+    Phe: 'Phenylalanine',
+    Pro: 'Proline',
+    Ser: 'Serine',
+    STOP: 'STOP',
+    Thr: 'Threonine',
+    Trp: 'Tryptophan',
+    Tyr: 'Tyrosine',
+    Val: 'Valine',
   };
   const name = mapAminoAcidCodeToName[code];
   if (!name) throw new Error(`Cannot find an amino acid name for code: "${code || 'none'}"`);
   return name;
+}
+
+function getAminoAcidLetter(code: AminoAcidCode): string {
+  const mapAminoAcidCodeToLetter: { [key in AminoAcidCode]: string } = {
+    Ala: 'A',
+    Arg: 'R',
+    Asn: 'N',
+    Asp: 'D',
+    Cys: 'C',
+    Glu: 'E',
+    Gln: 'Q',
+    Gly: 'G',
+    His: 'H',
+    Ile: 'I',
+    Leu: 'L',
+    Lys: 'K',
+    Met: 'M',
+    Phe: 'F',
+    Pro: 'P',
+    Ser: 'S',
+    STOP: 'STOP',
+    Thr: 'T',
+    Trp: 'W',
+    Tyr: 'Y',
+    Val: 'V',
+  };
+  const letter = mapAminoAcidCodeToLetter[code];
+  if (!letter) throw new Error(`Cannot find an amino acid one letter code for code: "${code || 'none'}"`);
+  return letter;
 }
 
 function getAminoAcidColor(code: AminoAcidCode): string {
@@ -240,27 +353,27 @@ function getAminoAcidColor(code: AminoAcidCode): string {
 
 function getAminoAcidPropType(code: AminoAcidCode): null | AminoAcidBioChemPropType {
   const mapAminoAcidCodeToPropType: { [key in AminoAcidCode]: null | AminoAcidBioChemPropType } = {
-    Phe: 'Nonpolar',
-    Leu: 'Nonpolar',
-    Ser: 'Polar',
-    Tyr: 'Polar',
-    STOP: null,
-    Cys: 'Polar',
-    Trp: 'Nonpolar',
-    Pro: 'Nonpolar',
-    His: 'Basic',
-    Gln: 'Polar',
-    Arg: 'Basic',
-    Ile: 'Nonpolar',
-    Met: 'Nonpolar',
-    Thr: 'Nonpolar',
-    Asn: 'Polar',
-    Lys: 'Basic',
-    Val: 'Nonpolar',
     Ala: 'Nonpolar',
+    Arg: 'Basic',
+    Asn: 'Polar',
     Asp: 'Acidic',
+    Cys: 'Polar',
+    Gln: 'Polar',
     Glu: 'Acidic',
     Gly: 'Nonpolar',
+    His: 'Basic',
+    Ile: 'Nonpolar',
+    Leu: 'Nonpolar',
+    Lys: 'Basic',
+    Met: 'Nonpolar',
+    Phe: 'Nonpolar',
+    Pro: 'Nonpolar',
+    Ser: 'Polar',
+    STOP: null,
+    Thr: 'Nonpolar',
+    Trp: 'Nonpolar',
+    Tyr: 'Polar',
+    Val: 'Nonpolar',
   };
   const propType = mapAminoAcidCodeToPropType[code];
   if (propType === undefined) throw new Error(`Cannot find an amino acid propType for code: "${code || 'none'}"`);
@@ -285,12 +398,14 @@ function getAminoAcidPropTypeColor(propType: AminoAcidBioChemPropType): string {
 export function getAminoAcidDef(code: AminoAcidCode): null | AminoAcidDef {
   if (code === 'STOP') return null;
   const name = getAminoAcidName(code);
+  const letterCode = getAminoAcidLetter(code);
   const color = getAminoAcidColor(code);
   const propType = getAminoAcidPropType(code);
   const propColor = getAminoAcidPropTypeColor(propType);
 
   return {
     code,
+    letterCode,
     name,
     color,
     propType,
@@ -298,14 +413,15 @@ export function getAminoAcidDef(code: AminoAcidCode): null | AminoAcidDef {
   };
 }
 
-// RNA -> Polypeptide
 export function translateRnaSequenceToPolypeptide(
   sequence: string,
   polypeptide: AminoAcidCode[] = [],
+  type: 'dna' | 'rna' = 'rna',
 ): RnaPolypeptideTranslation {
   const codon = sequence.slice(0, 3);
   const remainingSequence = sequence.slice(3);
-  const aminoAcid = getAminoAcidCodeFromCodon(codon);
+  const fn = type === 'dna' ? getAminoAcidCodeFromDnaCodon : getAminoAcidCodeFromRnaCodon;
+  const aminoAcid = fn(codon);
 
   if (aminoAcid) polypeptide.push(aminoAcid);
 
@@ -316,7 +432,7 @@ export function translateRnaSequenceToPolypeptide(
     };
   }
 
-  return translateRnaSequenceToPolypeptide(remainingSequence, polypeptide);
+  return translateRnaSequenceToPolypeptide(remainingSequence, polypeptide, type);
 }
 
 // ORFs

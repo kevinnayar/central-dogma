@@ -3,15 +3,15 @@ import { useState } from 'react';
 import {
   transcribeDnaToRna,
   getAllOpenReadingFrames,
-  getLongestORFIndex,
+  getLongestORF,
   translateRnaSequenceToPolypeptide,
   getAminoAcidDef,
 } from '../utils/baseUtils';
+import { AminoAcidDef } from '../types/baseTypes';
 
 import { Header } from './components/Header/Header';
 import { DNASection } from './sections/DNA/DNA';
 import { RNASection } from './sections/RNA/RNA';
-import { ORFsSection } from './sections/ORFs/ORFs';
 import { PolypeptideSection } from './sections/Polypeptide/Polypeptide';
 
 const seedTemplateDNA = [
@@ -21,6 +21,13 @@ const seedTemplateDNA = [
   'CACCGACGGCGTCGCCTACTGCTTCTCCCACCGCCTCCCATTATCACT',
 ].join('');
 
+function getOrf(dna: string): string {
+  const orfList = getAllOpenReadingFrames(dna, 'dna');
+  if (orfList.every(o => o.length === 0)) throw new Error('This sequence does not contain both a start and at least one stop codon.');
+  const orf = getLongestORF(orfList);
+  return orf;
+}
+
 export default function App() {
   const width = 36;
   const height = 36;
@@ -28,49 +35,39 @@ export default function App() {
   const [dna, setDna] = useState(seedTemplateDNA);
   const [rna, setRna] = useState(transcribeDnaToRna(dna));
 
-  const [orfList, setOrfList] = useState(getAllOpenReadingFrames(rna));
-  const orfIndex = getLongestORFIndex(orfList);
-  const [orf, setOrf] = useState(orfList[orfIndex]);
-  
-  const { polypeptide } = translateRnaSequenceToPolypeptide(orf);
-  const [aminoAcidDefs, setAminoAcidDefs] = useState(polypeptide.map(getAminoAcidDef));
+  const [orf, setOrf] = useState<null | string>(null);
+  const [aminoAcidDefs, setAminoAcidDefs] = useState<AminoAcidDef[]>([]);
+  const [error, setError] = useState<null | string>(null);
 
-  const transcribe = (updatedDna: string) => {
-    setDna(updatedDna);
+  const transcribeAndTranslate = (newDna: string) => {
+    setDna(newDna);
 
-    const updatedRna = transcribeDnaToRna(updatedDna);
-    setRna(updatedRna);
+    const newRna = transcribeDnaToRna(newDna);
+    setRna(newRna);
 
-    const updatedOrfList = getAllOpenReadingFrames(updatedRna);
-    setOrfList(updatedOrfList);
-  };
+    try {
+      setError(null);
 
-  const translate = (updatedOrf: string) => {
-    setOrf(updatedOrf);
+      const newOrf = getOrf(dna);
+      setOrf(newOrf);
 
-    const { polypeptide: updatedPolypeptide } = translateRnaSequenceToPolypeptide(updatedOrf);
-    setAminoAcidDefs(updatedPolypeptide.map(getAminoAcidDef));
+      const { polypeptide } = translateRnaSequenceToPolypeptide(newOrf, [], 'dna');
+
+      const newAminoAcidDefs = polypeptide.map(getAminoAcidDef);
+      setAminoAcidDefs(newAminoAcidDefs);
+    } catch (e) {
+      setError(e.toString());
+    }
   }
 
   return (
     <div className="app">
       <Header title="🧬 The Central Dogma of Molecular Biology" />
       <div className="sections">
-        <DNASection dna={dna} setDna={transcribe} />
+        <DNASection dna={dna} setDna={transcribeAndTranslate} />
         <RNASection dna={dna} rna={rna} width={width} height={height} />
-        <ORFsSection
-          orfList={orfList}
-          orfIndex={orfIndex}
-          width={width}
-          height={height}
-          setOrf={translate}
-        />
-        <PolypeptideSection 
-          orf={orf}
-          aminoAcidDefs={aminoAcidDefs}
-          width={width}
-          height={height}
-        />
+        {error && <div className="section section--error"><p>{error}</p></div>}
+        {orf && aminoAcidDefs && <PolypeptideSection orf={orf} aminoAcidDefs={aminoAcidDefs} width={width} height={height} />}
       </div>
       <footer className="footer"></footer>
     </div>

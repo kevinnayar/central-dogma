@@ -20,19 +20,37 @@ function OrfListItems(props: Props) {
   return (
     <div className="orf-list">
       {props.orfList.map((orf, index) => {
-        if (!orf.length) return null;
+        const isDisabled = !orf.length;
         return (
           <div key={orf} className="orf-list__item">
-            <div
-              className={`orf-list__selector ${orfIndex === index ? 'selected' : ''}`}
-              onClick={() => {
-                setOrfIndex(index);
-                const selectedOrf = props.orfList[index];
-                props.setOrf(selectedOrf);
-              }}
-            />
-            <div className="section__panel">
-              <NucleicAcidSequence sequence={orf} type="rna" width={props.width} height={props.height} />
+            <p className="orf-list__title">
+              {index < 3 ? `5'3'` : `3'5'`} Frame {index < 3 ? index + 1 : index - 2}
+            </p>
+            <div className="orf-list__content">
+              <div
+                className={`orf-list__selector ${
+                  orfIndex === index ? 'selected' : ''
+                } ${isDisabled ? 'disabled' : ''}`}
+                onClick={() => {
+                  if (!isDisabled) {
+                    setOrfIndex(index);
+                    const selectedOrf = props.orfList[index];
+                    props.setOrf(selectedOrf);
+                  }
+                }}
+              />
+              <div className="section__panel">
+                {!isDisabled ? (
+                  <NucleicAcidSequence
+                    sequence={orf}
+                    type="rna"
+                    width={props.width}
+                    height={props.height}
+                  />
+                ) : (
+                  <p>Incomplete or nonexistent open reading frame</p>
+                )}
+              </div>
             </div>
           </div>
         );

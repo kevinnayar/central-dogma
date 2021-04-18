@@ -47,6 +47,7 @@ export type AminoAcidBioChemPropType = 'Nonpolar' | 'Polar' | 'Basic' | 'Acidic'
 
 export type AminoAcidDef = {
   code: AminoAcidCode;
+  letterCode: string;
   name: string;
   color: string;
   propType: AminoAcidBioChemPropType;

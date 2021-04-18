@@ -15,7 +15,7 @@ type Props = {
 function PolypeptideBody(props: Props) {
   return (
     <div className="polypeptide-section">
-      <h4>mRNA {'->'} Amino Acid Chain</h4>
+      <h4>DNA {'->'} Amino Acid Chain</h4>
       <div className="section__panel">
         <NucleicAcidSequence
           sequence={props.orf}
@@ -41,8 +41,8 @@ function PolypeptideBody(props: Props) {
 
 export function PolypeptideSection(props: Props) {
   const title = 'Polypeptide';
-  const subtitle = 'During Translation, the mRNA trand is transllated to a chain of amino acids which will eventually folld into a protein.';
-  const variant = 'light';
+  const subtitle = 'During Translation, the mRNA strand is translated to a chain of amino acids which eventually folds into a protein.';
+  const variant = 'dark';
   return (
     <Section title={title} subtitle={subtitle} variant={variant}>
       <PolypeptideBody {...props} />

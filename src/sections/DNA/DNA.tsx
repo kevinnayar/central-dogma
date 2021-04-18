@@ -29,7 +29,7 @@ function DNABody(props: DNAProps) {
     <div className="dna-section">
       <label>DNA Template Strand</label>
       <textarea value={dna} onChange={updateSequence} />
-      <Button text="Update" onClick={commitSequence} />
+      <Button text="Transcribe &amp; Translate " onClick={commitSequence} />
     </div>
   );
 }

@@ -105,6 +105,11 @@ describe('baseUtils', () => {
       '',
       '',
     ]);
+
+    // https://web.expasy.org/translate/
+    // const dna =
+    //   'TACAAAAAGAATAACAGAAGGAGTAGCATAATGACAACGACCGAAGAGGATGACGGAGGGGGTGGCGTAGTGGTTGTCGCAGCGGCTGCCTAATAGTATTGATGGTGTTGCTTATTGTTTTTCTCATCGTCTTCCCAACAGCATCACCGACGGCGTCGCCTACTGCTTCTCCCACCGCCTCCCATTATCACT';
+    // expect(getAllOpenReadingFrames(dna, 'dna')).toEqual(['', '', '', '', '', '']);
   });
 
   test('getLongestORF', () => {

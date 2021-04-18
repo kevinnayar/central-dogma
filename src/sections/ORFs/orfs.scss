@@ -1,5 +1,11 @@
 .orf-list {
-  &__item {
+  &__title {
+    font-family: $font-mono;
+    color: white;
+    
+  }
+
+  &__content {
     display: flex;
   }
 
@@ -17,6 +23,11 @@
 
     &.selected {
       background: $light-blue-color;
+    }
+
+    &.disabled {
+      cursor: default;
+      background: $mid-gray-color;
     }
   }
 }
